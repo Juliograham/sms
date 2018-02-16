@@ -62,32 +62,36 @@ app.post('/sms', (req, res) => {
                     })
                 })
             }
-            
-          } else if (!message[0].custService) {
-            if (valid.test(body)) {
-            Message.findByIdAndUpdate(message[0]._id, {"$set": {"custService": body}}, {"new": true, "upsert": true}, () => {
-                  client.messages.create({
-                      to: `${from}`,
-                      from: `${to}`,
-                      body: 'Thank you for your time. We hope to see you soon!'
+
+        if (!message[0].custService) {
+                if (valid.test(body)) {
+                Message.findByIdAndUpdate(message[0]._id, {"$set": {"custService": body}}, {"new": true, "upsert": true}, () => {
+                      client.messages.create({
+                          to: `${from}`,
+                          from: `${to}`,
+                          body: 'Thank you for your time. We hope to see you soon!'
+                      })
                   })
-              })
-          } else {
-            client.messages.create({
-                to: `${from}`,
-                from: `${to}`,
-                body: 'Please submit a number between 1-10.'
-            })
-            setTimeout(() => {}, 1500);
-            Message.findByIdAndUpdate(message[0]._id, {"$set": {"custService": body}}, {"new": true, "upsert": true}, () => {
+              } else {
                 client.messages.create({
                     to: `${from}`,
                     from: `${to}`,
-                    body: 'How would you rate the customer service on a scale of 1-10?'
+                    body: 'Please submit a number between 1-10.'
                 })
-            })
-          }
-        }
+                setTimeout(() => {}, 1500);
+                Message.findByIdAndUpdate(message[0]._id, {"$set": {"custService": body}}, {"new": true, "upsert": true}, () => {
+                    client.messages.create({
+                        to: `${from}`,
+                        from: `${to}`,
+                        body: 'How would you rate the customer service on a scale of 1-10?'
+                    })
+                })
+              }
+            }
+            
+          } 
+          
+          
         } else {
             if (body === 'Survey' || 'survey') {
               let newMessage = new Message();

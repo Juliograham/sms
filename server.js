@@ -52,7 +52,7 @@ app.post('/sms', (req, res) => {
                     to: `${from}`,
                     from: `${to}`,
                     body: 'Please submit a number between 1-10.'
-                })
+                }).then(setTimeout(() => {}, 1500)).end();
                 Message.findByIdAndUpdate(message[0]._id, {"$set": {"productQual": body}}, {"new": true, "upsert": true}, () => {
                     client.messages.create({
                         to: `${from}`,
@@ -76,7 +76,7 @@ app.post('/sms', (req, res) => {
                 to: `${from}`,
                 from: `${to}`,
                 body: 'Please submit a number between 1-10.'
-            })
+            }).then(setTimeout(() => {}, 1500)).end();
             Message.findByIdAndUpdate(message[0]._id, {"$set": {"custService": body}}, {"new": true, "upsert": true}, () => {
                 client.messages.create({
                     to: `${from}`,

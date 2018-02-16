@@ -48,21 +48,23 @@ app.post('/sms', (req, res) => {
                     res.end();
                 })
             } else {
-                client.messages.create({
+                    client.messages.create({
                     to: `${from}`,
                     from: `${to}`,
                     body: 'Please submit a number between 1-10.'
                 })
                 setTimeout(() => {}, 1500);
-                Message.findByIdAndUpdate(message[0]._id, {"$set": {"productQual": body}}, {"new": true, "upsert": true}, () => {
-                    client.messages.create({
-                        to: `${from}`,
-                        from: `${to}`,
-                        body: 'How would you rate the product quality on a scale of 1-10?'
+                if (valid.test(body)) {
+                    Message.findByIdAndUpdate(message[0]._id, {"$set": {"productQual": body}}, {"new": true, "upsert": true}, () => {
+                        client.messages.create({
+                            to: `${from}`,
+                            from: `${to}`,
+                            body: 'How would you rate the product quality on a scale of 1-10?'
+                        })
+        
+                        res.end();
                     })
-
-                    res.end()
-                })
+                }
             }
             
           } else if (!message[0].custService) {
@@ -85,15 +87,17 @@ app.post('/sms', (req, res) => {
 
             res.end();
             setTimeout(() => {}, 1500);
-            Message.findByIdAndUpdate(message[0]._id, {"$set": {"custService": body}}, {"new": true, "upsert": true}, () => {
-                client.messages.create({
-                    to: `${from}`,
-                    from: `${to}`,
-                    body: 'How would you rate the customer service on a scale of 1-10?'
-                })
-
-                res.end();
-            })
+            if (valid.test(body)) {
+                Message.findByIdAndUpdate(message[0]._id, {"$set": {"custService": body}}, {"new": true, "upsert": true}, () => {
+                      client.messages.create({
+                          to: `${from}`,
+                          from: `${to}`,
+                          body: 'How would you rate the customer service from 1-10?'
+                      })
+    
+                      res.end();
+                  })
+              }
           }
         }
         } else {

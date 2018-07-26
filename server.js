@@ -3,8 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const app = express();
 const twilio = require('twilio');
-const accountSid = 'AC0bb2ca40be130cb4ca0bc569eb2cdcf7';
-const authToken = 'c57c50fe645b9dc00835290c44bcfc87';
+const accountSid, authToken = require('/keys/keys');
 const client = new twilio(accountSid, authToken);
 
 let valid = /^(?:[1-9]|0[1-9]|10)$/
